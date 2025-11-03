@@ -23,16 +23,18 @@
       .then(() => {
         console.log('✅ Spline załadowany');
         
-        // Nasłuchiwanie kliknięć
         app.addEventListener('mouseDown', (e) => {
-          console.log('Kliknięto:', e.target.name);
+          console.log('🎯 Kliknięto obiekt:', e.target.name);
           
-          // Wyślij wiadomość do rodzica (Webflow)
+          // Wyślij wiadomość do Webflow
           window.parent.postMessage({
             type: 'spline-click',
             objectName: e.target.name
           }, '*');
         });
+      })
+      .catch((error) => {
+        console.error('❌ Błąd:', error);
       });
   </script>
 </body>
