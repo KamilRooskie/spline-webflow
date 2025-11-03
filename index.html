@@ -8,25 +8,50 @@
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body, html { width: 100%; height: 100%; overflow: hidden; }
     canvas { display: block; width: 100%; height: 100%; }
+    
+    /* Popup */
+    #popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+      display: none;
+      z-index: 9999;
+    }
   </style>
 </head>
 <body>
   <canvas id="canvas3d"></canvas>
+  
+  <div id="popup">
+    <h2 id="popupText">Kliknięto obiekt!</h2>
+    <button onclick="document.getElementById('popup').style.display='none'">Zamknij</button>
+  </div>
   
   <script type="module">
     import { Application } from 'https://unpkg.com/@splinetool/runtime@latest/build/runtime.js';
 
     const canvas = document.getElementById('canvas3d');
     const app = new Application(canvas);
+    const popup = document.getElementById('popup');
+    const popupText = document.getElementById('popupText');
     
     app.load('https://prod.spline.design/6wBAMQKaOJF4uhQN/scene.splinecode')
       .then(() => {
         console.log('✅ Spline załadowany');
         
         app.addEventListener('mouseDown', (e) => {
-          console.log('🎯 Kliknięto obiekt:', e.target.name);
+          console.log('🎯 Kliknięto:', e.target.name);
           
-          // Wyślij wiadomość do Webflow
+          // Pokaż popup
+          popupText.textContent = 'Kliknięto: ' + e.target.name;
+          popup.style.display = 'block';
+          
+          // Wyślij też do Webflow
           window.parent.postMessage({
             type: 'spline-click',
             objectName: e.target.name
