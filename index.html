@@ -22,24 +22,18 @@
     app.load('https://prod.spline.design/6wBAMQKaOJF4uhQN/scene.splinecode')
       .then(() => {
         console.log('✅ Spline załadowany');
-        console.log('📦 App object:', app);
         
-        // Testujemy WSZYSTKIE możliwe eventy
-        ['mouseDown', 'mouseUp', 'click', 'mouseMove', 'mouseHover', 'keyDown', 'keyUp'].forEach(eventName => {
-          app.addEventListener(eventName, (e) => {
-            console.log(`🎯 Event: ${eventName}`, e);
-            if (e.target) {
-              console.log(`   Target name: ${e.target.name}`);
-              alert(`${eventName}: ${e.target.name}`);
-            }
-          });
+        app.addEventListener('mouseDown', (e) => {
+          console.log('🎯 Kliknięto obiekt:', e.target.name);
+          
+          // Wyślij wiadomość do Webflow (parent window)
+          window.parent.postMessage({
+            type: 'spline-click',
+            objectName: e.target.name
+          }, '*');
+          
+          console.log('📤 Wysłano wiadomość do parent');
         });
-        
-        // Sprawdź czy obiekt można znaleźć po nazwie
-        const obj1 = app.findObjectByName('Przycisk_1');
-        const obj2 = app.findObjectByName('Przycisk_2');
-        console.log('🔍 Przycisk_1:', obj1);
-        console.log('🔍 Przycisk_2:', obj2);
       })
       .catch((error) => {
         console.error('❌ Błąd:', error);
