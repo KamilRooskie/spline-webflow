@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Spline Scene</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body, html { width: 100%; height: 100%; overflow: hidden; }
+    canvas { display: block; width: 100%; height: 100%; }
+  </style>
+</head>
+<body>
+  <canvas id="canvas3d"></canvas>
+  
+  <script type="module">
+    import { Application } from 'https://unpkg.com/@splinetool/runtime@latest/build/runtime.js';
+
+    const canvas = document.getElementById('canvas3d');
+    const app = new Application(canvas);
+    
+    app.load('https://prod.spline.design/6wBAMQKaOJF4uhQN/scene.splinecode')
+      .then(() => {
+        console.log('✅ Spline załadowany');
+        
+        // Nasłuchiwanie kliknięć
+        app.addEventListener('mouseDown', (e) => {
+          console.log('Kliknięto:', e.target.name);
+          
+          // Wyślij wiadomość do rodzica (Webflow)
+          window.parent.postMessage({
+            type: 'spline-click',
+            objectName: e.target.name
+          }, '*');
+        });
+      });
+  </script>
+</body>
+</html>
